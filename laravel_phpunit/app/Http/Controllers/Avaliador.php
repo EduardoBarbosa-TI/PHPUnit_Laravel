@@ -22,8 +22,8 @@ class Avaliador
         }
         
         $lances = $leilao->getLances();
-        usort($lances, function(Lance $primeiroLance, Lance $SegundoLance){
-            return  $SegundoLance->getValor() - $primeiroLance->getValor();
+        usort($lances, function(Lance $primeiroLance, Lance $segundoLance){
+            return  $segundoLance->getValor() - $primeiroLance->getValor();
         });
         $this->maioresLances = array_slice($lances, 0, 3);
     }
