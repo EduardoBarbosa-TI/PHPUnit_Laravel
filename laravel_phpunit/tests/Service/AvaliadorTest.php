@@ -7,26 +7,24 @@ use App\Models\Leilao;
 use App\Models\Usuario;
 use App\Http\Controllers\Avaliador;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase as FrameworkTestCase;
+use Tests\TestCase;
 
-
-class AvaliadorTest extends FrameworkTestCase
+class AvaliadorTest extends TestCase
 {
+    private $leiloeiro;
+    public function setUp(): void
+    {
+        $this->leiloeiro= new Avaliador();
+    }
+
     #[DataProvider('leilaoEmOrdemAleatoria')]
     #[DataProvider('leilaoEmOrdemCrescente')]
     #[DataProvider('leilaoEmOrdemDecrescente')]
     public function testAvaliadorDeveEncontrarMaiorLance(Leilao $leilao)
-    {
-        # Arrange - Given
-        require 'vendor/autoload.php';
+    {     
+        $this->leiloeiro->avalia($leilao);    
 
-        $leiloeiro = new Avaliador();
-        # Act - When
-        $leiloeiro->avalia($leilao);    
-
-        $maiorValor = $leiloeiro->getMaiorValor();
-
-        # Assert - Then
+        $maiorValor = $this->leiloeiro->getMaiorValor();
 
         self::assertEquals(4000, $maiorValor);
     }
@@ -35,13 +33,9 @@ class AvaliadorTest extends FrameworkTestCase
     #[DataProvider('leilaoEmOrdemDecrescente')]
     public function testAvaliadorDeveEncontrarMenorLance(Leilao $leilao)
     {
-        require 'vendor/autoload.php';
- 
-        $leiloeiro = new Avaliador();
+        $this->leiloeiro->avalia($leilao);    
 
-        $leiloeiro->avalia($leilao);    
-
-        $menorValor = $leiloeiro->getMenorValor();
+        $menorValor = $this->leiloeiro->getMenorValor();
 
         self::assertEquals(1700, $menorValor);
     }
@@ -50,10 +44,9 @@ class AvaliadorTest extends FrameworkTestCase
     #[DataProvider('leilaoEmOrdemDecrescente')]
     public function testAvaliadorDeveBuscarOs3MaioresValores(Leilao $leilao)
     {
-        $leiloeiro =  new Avaliador();
-        $leiloeiro->avalia($leilao);
+        $this->leiloeiro->avalia($leilao);
 
-        $maiores = $leiloeiro->getMaioresLance();
+        $maiores = $this->leiloeiro->getMaioresLance();
         static::assertCount(3, $maiores);
         static::assertEquals(4000, $maiores[0]->getValor());
         static::assertEquals(2000, $maiores[1]->getValor());
@@ -75,7 +68,7 @@ class AvaliadorTest extends FrameworkTestCase
         $leilao->recebeLance(new Lance($maria, 4000));
 
         return [
-            [$leilao]
+            'ordem-crescente' => [$leilao]
         ];
     }
 
@@ -92,7 +85,7 @@ class AvaliadorTest extends FrameworkTestCase
         $leilao->recebeLance(new Lance($ana,1700));
 
         return [
-            [$leilao]
+           'ordem-decrescente' => [$leilao]
         ];
     }
 
@@ -109,7 +102,7 @@ class AvaliadorTest extends FrameworkTestCase
         $leilao->recebeLance(new Lance($maria, 4000));
         
         return [
-            [$leilao]
+            'ordem-aleatoria' =>[$leilao]
         ];
     }
 }
