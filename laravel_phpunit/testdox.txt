@@ -11,6 +11,7 @@ Avaliador (Alura\Leilao\Tests\Service\Avaliador)
 
 Leilao (ALura\Leilao\Tests\Model\Leilao)
  [x] Leilao nao deve receceber lances repetidos
+ [x] Leilao nao deve aceitar mais de 5 lances por usuario
  [x] Leilao deve receber lances with data set "Segundo Lance"
  [x] Leilao deve receber lances with data set "Primeiro Lance"
 
